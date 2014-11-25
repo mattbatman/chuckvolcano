@@ -1,3 +1,7 @@
+// No Copyright.
+// This is an attempt to emulate/recreate/"cover"
+// Truth Ray by Thom Yorke
+
 SinOsc s => dac;
 SinOsc t => dac;
 
