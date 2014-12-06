@@ -14,6 +14,10 @@ SndBuf kick5 => master;
 
 .6 => master.gain;
 
+0 => t.gain;
+0 => u.gain;
+0 => s.gain;
+
 // load soundfiles into sndbuf
 me.dir() + "/audio/kick_01.wav" => kick1.read;
 me.dir() + "/audio/kick_02.wav" => kick2.read;
@@ -90,17 +94,17 @@ separateNotes();
 // infinite loop
 while (true)
 {
-    // beat goes from 0 to 7 (8 positions)
-    counter % 8 => int beat;
+    // beat goes from 0 to 11 (12 positions)
+    counter % 12 => int beat;
     
     // bass drum on 0 and 4
-    if ((beat == 0) || (beat == 1) || (beat == 3) || (beat == 5))
+    if ((beat == 0) || (beat == 1) || (beat == 3) || (beat == 5) || (beat == 7) || (beat == 8) || (beat == 10))
     {
         0 => kick2.pos;
     }
     
     // snare drum on 2 and 6
-    if ((beat == 4))
+    if ((beat == 4) || (beat == 11))
     {
         0 => kick1.pos;
     }
@@ -121,7 +125,7 @@ while (true)
 // Turn main gain s on and secondary gain t off
 0 => t.gain;
 0 => u.gain;
-0 => s.gain; // TURN BACK ON
+0.3 => s.gain;
 
 // Begin intro
 Std.mtof(lowAFlat) => s.freq;
