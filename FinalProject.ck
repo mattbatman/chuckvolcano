@@ -5,6 +5,29 @@
 SinOsc s => dac;
 SinOsc t => dac;
 SinOsc u => dac;
+Gain master => dac;
+SndBuf kick1 => master;
+SndBuf kick2 => master;
+SndBuf kick3 => master;
+SndBuf kick4 => master;
+SndBuf kick5 => master;
+
+.6 => master.gain;
+
+// load soundfiles into sndbuf
+me.dir() + "/audio/kick_01.wav" => kick1.read;
+me.dir() + "/audio/kick_02.wav" => kick2.read;
+me.dir() + "/audio/kick_03.wav" => kick3.read;
+me.dir() + "/audio/kick_04.wav" => kick4.read;
+me.dir() + "/audio/kick_05.wav" => kick5.read;
+
+// set all playheads to end so no sound is made
+kick1.samples() => kick1.pos;
+kick2.samples() => kick2.pos;
+kick3.samples() => kick3.pos;
+kick4.samples() => kick4.pos;
+kick5.samples() => kick5.pos;
+
 
 // Initialize and assign intro variables
 int lowAFlat;
@@ -34,7 +57,13 @@ fun void separateNotes() {
     
 fun void quadro(int x) {
 Std.mtof(x) => s.freq;
-1::second => now;
+0.75::second => now;
+
+// note separation
+separateNotes();
+
+Std.mtof(x) => s.freq;
+0.75::second => now;
 
 // note separation
 separateNotes();
@@ -46,25 +75,53 @@ Std.mtof(x) => s.freq;
 separateNotes();
 
 Std.mtof(x) => s.freq;
-0.5::second => now;
-
-// note separation
-separateNotes();
-
-Std.mtof(x) => s.freq;
-0.5::second => now;
+0.75::second => now;
 
 // note separation
 separateNotes();
 }
 //END DEFINE FUNCTIONS
 
+
+
+// initialize counter variable
+0 => int counter;
+
+// infinite loop
+while (true)
+{
+    // beat goes from 0 to 7 (8 positions)
+    counter % 8 => int beat;
+    
+    // bass drum on 0 and 4
+    if ((beat == 0) || (beat == 1) || (beat == 3) || (beat == 5))
+    {
+        0 => kick2.pos;
+    }
+    
+    // snare drum on 2 and 6
+    if ((beat == 4))
+    {
+        0 => kick1.pos;
+    }
+ 
+    counter++; // counter = 1 => counter
+    250::ms => now;
+}
+    
+    
+    
+    
+    
+    
+    
+
 // INTRO
 
 // Turn main gain s on and secondary gain t off
 0 => t.gain;
 0 => u.gain;
-0.3 => s.gain;
+0 => s.gain; // TURN BACK ON
 
 // Begin intro
 Std.mtof(lowAFlat) => s.freq;
